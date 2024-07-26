@@ -1,0 +1,10 @@
+FROM quay.io/redhat-user-workloads/rhtap-build-tenant/jvm-build-service-builder-images/ubi8:4c6c7ab8f72f0ac01c1b6a899b7c630794e39507
+USER 0
+WORKDIR /root
+RUN mkdir -p /root/project /root/software/settings /original-content/marker
+ENV JBS_DISABLE_CACHE=true
+COPY .jbs/run-build.sh /root
+COPY . /root/project/source/
+RUN /root/run-build.sh
+FROM scratch
+COPY --from=0 /root/project/artifacts /
