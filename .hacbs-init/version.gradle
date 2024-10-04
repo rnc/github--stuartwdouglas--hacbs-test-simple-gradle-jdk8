@@ -1,0 +1,18 @@
+apply plugin: VersionPlugin
+
+class VersionPlugin implements Plugin<Gradle> {
+
+    private static String ENFORCE_VERSION = System.getenv("ENFORCE_VERSION")
+    private static String PROJECT_VERSION = System.getenv("PROJECT_VERSION")
+
+    void apply(Gradle gradle) {
+        if ("true".equals(ENFORCE_VERSION)) {
+            gradle.allprojects {
+                project -> project.afterEvaluate {
+                    project.logger.lifecycle "Overriding version for ${project.name} to ${PROJECT_VERSION}"
+                    version PROJECT_VERSION
+                }
+            }
+        }
+    }
+}
